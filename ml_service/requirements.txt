@@ -5,5 +5,3 @@ joblib
 pandas
 python-multipart
 scikit-learn
-catboost
-lightgbm
