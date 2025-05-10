@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ML Обработка CSV</title>
+    <title>ML обработка</title>
+
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+
     <style>
-        body { font-family: Arial, sans-serif; margin: 2rem; }
+        body { margin: 2rem; }
         .error { color: red; }
-        .result-table, table { margin-top: 20px; border-collapse: collapse; }
-        table, th, td { border: 1px solid black; padding: 6px; }
         .spinner {
             border: 8px solid #f3f3f3;
             border-top: 8px solid #3498db;
@@ -16,78 +17,85 @@
             animation: spin 1s linear infinite;
             margin: 10px auto;
         }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }        
     </style>
 </head>
-<body>
-    <h1>Обработка CSV через ML модели</h1>
+<body class="container">
+    <h1 class="my-4 text-center">Обработка данных с помощью ML моделей</h1>
+
     <div id="loading" style="display: none;">
-        <p>Загрузка... Пожалуйста, подождите.</p>
+        <p class="text-center">Загрузка... Пожалуйста, подождите.</p>
         <div class="spinner"></div>
     </div>
+
     <div id="success" style="display: none; text-align: center; color: green;">
         <p>Файл успешно обработан!</p>
         <div style="font-size: 48px;">✔️</div>
     </div>
     
-    
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <label>Тренировочный CSV:</label><br>
-        <input type="file" name="train_file" accept=".csv" required><br><br>
-    
-        <label>Тестовый CSV:</label><br>
-        <input type="file" name="test_file" accept=".csv" required><br><br>
-    
-        <button type="submit">Загрузить и обработать</button>
+    <form action="/upload" method="post" enctype="multipart/form-data" class="mb-4">
+        <div class="mb-3">
+            <label class="form-label">Тренировочный CSV:</label>
+            <input type="file" class="form-control" name="train_file" accept=".csv" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Тестовый CSV:</label>
+            <input type="file" class="form-control" name="test_file" accept=".csv" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Обработать</button>
     </form>    
 
     {% if error %}
-        <p class="error">Ошибка: {{ error }}</p>
+        <div class="alert alert-danger" role="alert">
+            Ошибка: {{ error }}
+        </div>
     {% endif %}
 
     {% if metric1 is defined and metric2 is defined %}
-        <div class="metrics">
+        <div class="metrics mb-4">
             <h2>Метрики:</h2>
-            <ul>
-                <li><strong>Precision:</strong> {{ "%.3f"|format(metric1) }}</li>
-                <li><strong>Recall:</strong> {{ "%.3f"|format(metric2) }}</li>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Precision:</strong> {{ "%.3f"|format(metric1) }}</li>
+                <li class="list-group-item"><strong>Recall:</strong> {{ "%.3f"|format(metric2) }}</li>
             </ul>
         </div>
     {% endif %}
 
     {% if result %}
         <div class="result-table">
-            <h2>Результаты обработки (таблица):</h2>
+            <h2>Confusion matrix:</h2>
             {{ result | safe }}
         </div>
     {% endif %}
+
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+
     <script>
         const form = document.querySelector("form");
         const loadingDiv = document.getElementById("loading");
         const successDiv = document.getElementById("success");
-    
+
         form.addEventListener("submit", function () {
             loadingDiv.style.display = "block";
             successDiv.style.display = "none";
         });
-    
-        // Показываем галочку, если есть результат на странице
+
         window.addEventListener("load", function () {
             const hasResult = document.querySelector(".result-table") ||
                               document.querySelector(".metrics") ||
                               document.querySelector(".confusion-matrix");
-    
+
             if (hasResult) {
                 loadingDiv.style.display = "none";
                 successDiv.style.display = "block";
             }
         });
     </script>
-    
-    
 </body>
 </html>

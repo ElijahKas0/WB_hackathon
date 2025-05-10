@@ -66,14 +66,14 @@ async def upload(
         FN = target_1_test - TP
         FP = target_0_test - TN
         conf_matrix = [
-            [TN, FP],
+            [FP, TN],
             [FN, TP] 
         ]
 
         result_df = pd.DataFrame(
             conf_matrix,
-            index=["Actual 0", "Actual 1"],
-            columns=["Predicted 0", "Predicted 1"]
+            index=["Predicted 0", "Predicted 1"],
+            columns=["Actual 0", "Actual 1"]
         )
         
         result_html = result_df.to_html(classes="table table-striped")
