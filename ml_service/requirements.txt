@@ -1,6 +1,7 @@
 fastapi
 uvicorn[standard]
 jinja2
+joblib
 pandas
 python-multipart
 scikit-learn

@@ -1,6 +1,5 @@
+import joblib
 import numpy as np
-import pandas as pd
-import lightgbm as lgb
 from sklearn.metrics import (
     precision_score, recall_score, f1_score
 )
@@ -9,12 +8,8 @@ from sklearn.preprocessing import (
 )
 from sklearn.compose import ColumnTransformer
 from scipy.sparse import issparse
-# warnings.filterwarnings('ignore')
 
 def predict_model_LGBM(df_train,df_test):
-    # Извлечение данных из csv-таблиц
-    # df_train = pd.read_csv('Task/df_train.csv')
-    # df_test = pd.read_csv('Task/df_test.csv')
 
     # Удаление дубликатов
     df_train = df_train.drop_duplicates()
@@ -47,35 +42,9 @@ def predict_model_LGBM(df_train,df_test):
 
     # Преобразование X в numpy
     if issparse(X_train_transformed):
-        X_train_np = X_train_transformed.toarray()
         X_test_transformed = X_test_transformed.toarray()
-    else:
-        X_train_np = X_train_transformed
 
-    # Учёт дисбаланса классов
-    pos_weight = 6.9 
-
-    # Гиперпараметры
-    params = {
-        'objective': 'binary',
-        'metric': 'binary_logloss',
-        'boosting_type': 'gbdt',
-        'verbosity': -1,
-        'num_leaves': 80,
-        'max_depth': 8,
-        'learning_rate': 0.1,
-        'n_estimators': 150,
-        'min_child_weight': 20,
-        'lambda_l2': 0.3,
-        'min_data_in_leaf': 30,
-        'scale_pos_weight': pos_weight,
-        'random_state': 42,
-        'n_jobs': -1
-    }
-
-    # Обучение модели на всем тренировочном наборе
-    model = lgb.LGBMClassifier(**params)
-    model.fit(X_train_np, y_train_np)
+    model = joblib.load('LGBM_model.pkl')
 
     # Предсказание вероятностей на тесте
     y_proba_test = model.predict_proba(X_test_transformed)[:, 1]
