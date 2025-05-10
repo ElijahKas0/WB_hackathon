@@ -44,7 +44,7 @@ def predict_model_LGBM(df_train,df_test):
     if issparse(X_train_transformed):
         X_test_transformed = X_test_transformed.toarray()
 
-    model = joblib.load('LGBM_model.pkl')
+    model = joblib.load('models_ml/LGBM_model.pkl')
 
     # Предсказание вероятностей на тесте
     y_proba_test = model.predict_proba(X_test_transformed)[:, 1]

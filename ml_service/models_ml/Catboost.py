@@ -61,7 +61,7 @@ def predict_model_Catboost(df_train,df_test):
         random_state=42
     )
 
-    final_model = joblib.load('catboost_model.pkl')
+    final_model = joblib.load('models_ml/catboost_model.pkl')
 
     # Подбор порога
     y_val_proba = final_model.predict_proba(X_val)[:, 1]
