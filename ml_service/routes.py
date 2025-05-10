@@ -49,34 +49,34 @@ async def upload(
         all_unique_TP = np.union1d(TP_lgbm_indices, TP_catboost_indices)
         
         # True Negatives - TN
-        TN_lgbm_indices = np.where((y_pred_test_LGBM == 1) & (y_test_np == 0))[0]
-        TN_catboost_indices = np.where((y_pred_test_Catboost == 1) & (y_test_np == 0))[0]
+        FP_lgbm_indices = np.where((y_pred_test_LGBM == 1) & (y_test_np == 0))[0]
+        FP_catboost_indices = np.where((y_pred_test_Catboost == 1) & (y_test_np == 0))[0]
 
         # Все уникальные TN
-        all_unique_TN = np.union1d(TN_lgbm_indices, TN_catboost_indices)
+        all_unique_FP = np.union1d(FP_lgbm_indices, FP_catboost_indices)
 
         target_1_test = np.sum(y_test_np)  
         target_0_test = len(y_test_np) - target_1_test  
         # Итоговая точность и полнота
-        precision = len(all_unique_TP)/(len(all_unique_TP)+len(all_unique_TN))
+        precision = len(all_unique_TP)/(len(all_unique_TP)+len(all_unique_FP))
         recall = len(all_unique_TP)/target_1_test
         
         TP = len(all_unique_TP)
-        TN = len(all_unique_TN)
-        FN = target_1_test - TP
-        FP = target_0_test - TN
+        FP = len(all_unique_FP)
+        FN = target_1_test - FP
+        TN = target_0_test - TP
         conf_matrix = [
-            [FP, TN],
+            [TN, FP],
             [FN, TP] 
         ]
 
         result_df = pd.DataFrame(
             conf_matrix,
-            index=["Predicted 0", "Predicted 1"],
-            columns=["Actual 0", "Actual 1"]
+            index=["Actual 0", "Actual 1"],
+            columns=["Predicted 0", "Predicted 1"]
         )
         
-        result_html = result_df.to_html(classes="table table-striped")
+        result_html = result_df.to_html(classes="table table-bordered text-center align-middle")
 
         return templates.TemplateResponse("index.html", {
             "request": request,
