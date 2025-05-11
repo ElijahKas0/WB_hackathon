@@ -77,6 +77,7 @@ async def upload(
         )
         
         result_html = result_df.to_html(classes="table table-bordered text-center align-middle")
+        result_html = result_html.replace('<tr style="text-align: right;">', '<tr style="text-align: center;">')
 
         return templates.TemplateResponse("index.html", {
             "request": request,
