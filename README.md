@@ -5,7 +5,6 @@
 Структура репозитория организована следующим образом:
 
 ### Альтернативный вариант с подсветкой:
-````markdown
 ```text
 .
 ├── ml_service/
@@ -18,11 +17,11 @@
 │   ├── Dockerfile       # Docker config
 │   └── docker-compose.yml
 │
-├── Top_3_notebooks/     # Лучшие модели
-│   ├── Top_1.ipynb      # CatBoost + LightGBM
-│   ├── Top_2.ipynb      # LightGBM + LogReg
-│   ├── Top_3.ipynb      # CatBoost + LogReg
-    └── Task/            # Данные
+└── Top_3_notebooks/     # Лучшие модели
+   ├── Top_1.ipynb      # CatBoost + LightGBM
+   ├── Top_2.ipynb      # LightGBM + LogReg
+   ├── Top_3.ipynb      # CatBoost + LogReg
+   └── Task/            # Данные
      ├── train.csv       # Обучающая
      └── test.csv         # Тестовая
 
