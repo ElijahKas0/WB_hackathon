@@ -63,8 +63,8 @@ async def upload(
         
         TP = len(all_unique_TP)
         FP = len(all_unique_FP)
-        FN = target_1_test - FP
-        TN = target_0_test - TP
+        FN = target_1_test - TP
+        TN = target_0_test - FP
         conf_matrix = [
             [TN, FP],
             [FN, TP] 
