@@ -8,9 +8,6 @@ from sklearn.metrics import (
 from sklearn.model_selection import (
     train_test_split
 )
-from catboost import (
-    CatBoostClassifier
-)
 
 def predict_model_Catboost(df_train,df_test):
 
