@@ -31,11 +31,9 @@ async def upload(
     test_file: UploadFile = File(...)
 ):
     try:
-        # Валидация и чтение файлов
         df_train = validate_csv(train_file)
         df_test = validate_csv(test_file)
 
-        # Параллельная обработка
         task1 = run_in_threadpool(predict_model_LGBM, df_train.copy(), df_test.copy())
         task2 = run_in_threadpool(predict_model_Catboost, df_train.copy(), df_test.copy())
 
@@ -45,19 +43,16 @@ async def upload(
         TP_lgbm_indices = np.where((y_pred_test_LGBM == 1) & (y_test_np == 1))[0]
         TP_catboost_indices = np.where((y_pred_test_Catboost == 1) & (y_test_np == 1))[0]
 
-        # Все уникальные TP
         all_unique_TP = np.union1d(TP_lgbm_indices, TP_catboost_indices)
         
-        # True Negatives - TN
         FP_lgbm_indices = np.where((y_pred_test_LGBM == 1) & (y_test_np == 0))[0]
         FP_catboost_indices = np.where((y_pred_test_Catboost == 1) & (y_test_np == 0))[0]
 
-        # Все уникальные TN
         all_unique_FP = np.union1d(FP_lgbm_indices, FP_catboost_indices)
 
         target_1_test = np.sum(y_test_np)  
         target_0_test = len(y_test_np) - target_1_test  
-        # Итоговая точность и полнота
+
         precision = len(all_unique_TP)/(len(all_unique_TP)+len(all_unique_FP))
         recall = len(all_unique_TP)/target_1_test
         
@@ -77,7 +72,8 @@ async def upload(
         )
         
         result_html = result_df.to_html(classes="table table-bordered text-center align-middle")
-        result_html = result_html.replace('<tr style="text-align: right;">', '<tr style="text-align: center;">')
+        # н7жно поправить выравнивание
+        result_html = result_html.replace('<tr style="text-align: right;">', '<tr style="text-align: center;">')  
 
         return templates.TemplateResponse("index.html", {
             "request": request,
